@@ -17,13 +17,13 @@ All three containers are built from the same `Dockerfile`. `docker-compose.yml` 
 Requires Docker and Docker Compose.
 
 ```bash
-git clone <this-repository-url>
-cd <repository-directory>
+git clone https://github.com/ajitashwath/adb-asgmt
+cd adb-asgmt
 export ADBREW_CODEBASE_PATH="$(pwd)/src"
 docker-compose up -d --build
 ```
 
-The first build takes a few minutes, and the `app` container needs a little longer to install its dependencies on first start (`docker logs -f app` to follow).
+On Windows, run these in Git Bash (or set `ADBREW_CODEBASE_PATH` to the absolute path of `src`). The first build takes a few minutes, and the `app` container needs a little longer to install its dependencies on first start (`docker logs -f app` to follow).
 
 - Frontend: http://localhost:3000
 - API: http://localhost:8000/todos
@@ -69,8 +69,9 @@ Errors are returned as `{"error": "<message>"}`. The trailing slash is optional 
 
 **Frontend** (`src/app/src`)
 - `api.js`: thin `fetch` wrapper that turns error responses into exceptions. The API URL can be overridden with `REACT_APP_API_URL`.
-- `App.js`: function component using `useState`, `useEffect` and `useCallback`. It loads TODOs on mount and reloads after each successful submit; errors are shown inline.
-- `App.test.js`: component tests with the API module mocked.
+- `App.js`: function component using `useState`, `useEffect` and `useCallback`. It loads TODOs on mount and reloads after each successful submit. The submit button is disabled while the input is blank or a request is in flight, and errors are shown in a banner.
+- `App.css`: card-style layout (form on top, list below, empty-state message); colours are CSS variables at the top of the file.
+- `App.test.js`: component tests with the API module mocked (listing, create + refresh, load error).
 
 ## Tests
 
@@ -86,4 +87,6 @@ docker exec app bash -c "cd /src/app && CI=true yarn test"
 
 - The base image is pinned to `python:3.8-bullseye`. The floating `python:3.8` tag moved to a newer Debian, where the `libssl1.1` dependency of MongoDB 4.4 can't be installed.
 - Bullseye is end-of-life, so apt's security repository is pointed at `archive.debian.org`.
-- Mongo data is persisted in `src/db` (gitignored).
+- `CHOKIDAR_USEPOLLING=true` is set on the `app` service so hot reload works on Windows/macOS, where file-change events don't pass through Docker bind mounts.
+- Don't run `npm install` inside `src/app`: it rewrites `yarn.lock`. Dependencies are installed by `yarn` in the container.
+- Mongo data is persisted in `src/db` (gitignored). To reset it, run `docker-compose down` and delete `src/db`.

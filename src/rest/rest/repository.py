@@ -18,8 +18,10 @@ class TodoRepository:
 
     @staticmethod
     def _serialize(doc):
+        # Mongo stores UTC but pymongo returns naive datetimes by default.
+        created_at = doc['created_at'].replace(tzinfo=timezone.utc)
         return {
             'id': str(doc['_id']),
             'description': doc['description'],
-            'created_at': doc['created_at'].isoformat(),
+            'created_at': created_at.isoformat(),
         }

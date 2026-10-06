@@ -18,12 +18,12 @@ test('creates a todo and refreshes the list', async () => {
   api.createTodo.mockResolvedValue({ id: '2', description: 'Write tests' });
 
   render(<App />);
-  userEvent.type(await screen.findByLabelText(/todo:/i), 'Write tests');
+  userEvent.type(await screen.findByLabelText(/new todo/i), 'Write tests');
   userEvent.click(screen.getByRole('button', { name: /add todo/i }));
 
   expect(await screen.findByText('Write tests')).toBeInTheDocument();
   expect(api.createTodo).toHaveBeenCalledWith('Write tests');
-  await waitFor(() => expect(screen.getByLabelText(/todo:/i)).toHaveValue(''));
+  await waitFor(() => expect(screen.getByLabelText(/new todo/i)).toHaveValue(''));
 });
 
 test('shows an error when loading fails', async () => {

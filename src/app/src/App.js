@@ -39,33 +39,32 @@ export function App() {
 
   return (
     <div className="App">
-      <div>
-        <h1>List of TODOs</h1>
-        {todos.length === 0 && <p>No TODOs yet.</p>}
-        <ul>
-          {todos.map((todo) => (
-            <li key={todo.id}>{todo.description}</li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h1>Create a ToDo</h1>
-        {error && <p role="alert" style={{ color: 'red' }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="todo">ToDo: </label>
-            <input
-              id="todo"
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              maxLength={200}
-            />
-          </div>
-          <div style={{ marginTop: '5px' }}>
-            <button disabled={submitting || !description.trim()}>Add ToDo!</button>
-          </div>
+      <div className="card">
+        <h1 className="title">My TODOs</h1>
+        {error && <p role="alert" className="error">{error}</p>}
+        <form className="todo-form" onSubmit={handleSubmit}>
+          <input
+            id="todo"
+            type="text"
+            aria-label="New ToDo"
+            placeholder="What needs to be done?"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            maxLength={200}
+          />
+          <button disabled={submitting || !description.trim()}>Add ToDo!</button>
         </form>
+
+        <h2 className="section-title">List of TODOs</h2>
+        {todos.length === 0 ? (
+          <p className="empty">No TODOs yet. Add one above!</p>
+        ) : (
+          <ul className="todo-list">
+            {todos.map((todo) => (
+              <li key={todo.id} className="todo-item">{todo.description}</li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

@@ -15,6 +15,9 @@ services:
     build: .
     container_name: app
     command: bash -c "cd /src/app && yarn install && yarn start"
+    environment:
+      # File-change events don't propagate through Docker bind mounts on Windows/macOS.
+      - CHOKIDAR_USEPOLLING=true
     ports:
       - "3000:3000"
     volumes:
