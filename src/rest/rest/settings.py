@@ -22,11 +22,12 @@ sys.path.append(os.path.join(BASE_DIR, ".."))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-SECRET_KEY = '00000000000000000000000000000000000000000000000000'
+# Override both via environment variables outside local development.
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '00000000000000000000000000000000000000000000000000')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'true').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -128,9 +129,10 @@ REST_FRAMEWORK = {
     # other settings...
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_PERMISSION_CLASSES': [],
+    'EXCEPTION_HANDLER': 'rest.exceptions.api_exception_handler',
 }
 
 
-CORS_ORIGIN_ALLOW_ALL = True # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://127.0.0.1:3000']
 CORS_ALLOW_CREDENTIALS = True
 
