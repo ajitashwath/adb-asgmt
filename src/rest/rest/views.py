@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 mongo_uri = 'mongodb://' + os.environ["MONGO_HOST"] + ':' + os.environ["MONGO_PORT"]
 db = MongoClient(mongo_uri)['test_db']
 
-
 class TodoListView(APIView):
     repository = TodoRepository(db)
 
@@ -51,5 +50,4 @@ class TodoListView(APIView):
 
     @staticmethod
     def _db_error():
-        return Response({'error': 'Database unavailable.'},
-                        status=status.HTTP_503_SERVICE_UNAVAILABLE)
+        return Response({'error': 'Database unavailable.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
